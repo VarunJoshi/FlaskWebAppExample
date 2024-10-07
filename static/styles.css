@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.card {
+    width: auto;
+}
+
+/* Add some custom styles for the loading indicator */
+#loading-indicator {
+    display: none;
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Position the toast at the top right corner */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+}

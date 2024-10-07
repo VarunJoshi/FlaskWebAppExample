@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send Commands</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> <!-- Link to the CSS file -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <!-- Information Section -->
+    <div class="card mt-3">
+      <div class="card-body">
+        <h5 class="card-title">File Format</h5>
+        <p class="card-text">
+          The text/CSV file should have a header line with the following fields: command, unit_id, delay (in seconds), param.
+          The rest of the lines should contain values for these variables, separated either by a space or a comma.
+        </p>
+        <img src="{{ url_for('static', filename='images/fileformat.png') }}" alt="File Format Screenshot" class="img-fluid">
+      </div>
+    </div>
+
+    <form id="upload-form" method="POST" enctype="multipart/form-data" class="mt-3">
+        <div class="form-group">
+            <label>Select a text/csv file:</label><br>
+            <input type="file" name="file" class="form-control-file" required>
+        </div>
+        <div class="form-group">
+            <label>Enter the number of times to execute the script (for performance testing purposes only!)</label><br>
+            <input type="number" name="times" class="form-control" min="1" step="1" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <div id="loading-indicator">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <p>Uploading, please wait...</p>
+    </div>
+
+    <!-- Toast message for success -->
+    <div class="toast" id="success-toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
+        <div class="toast-header">
+            <strong class="mr-auto text-success">Success</strong>
+            <small>Just now</small>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            File uploaded successfully!
+        </div>
+    </div>
+
+    <!-- Toast message for error -->
+    <div class="toast" id="error-toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
+        <div class="toast-header">
+            <strong class="mr-auto text-danger">Error</strong>
+            <small>Just now</small>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body" id="error-toast-body">
+            An error occurred during the upload.
+        </div>
+    </div>
+
+    <script type="text/javascript" charset="utf-8">
+        $('#upload-form').submit(function(e) {
+            e.preventDefault();
+            $('#loading-indicator').show();  // Show the loading indicator
+
+            // Client-side validation
+            var fileInput = $('input[name="file"]');
+            var integerInput = $('input[name="times"]');
+            if (!fileInput.val() || !integerInput.val() || integerInput.val() <= 0) {
+                $('#loading-indicator').hide();
+                $('#error-toast-body').text('Please select a file and enter a valid number.');
+                $('#error-toast').toast('show');
+                return;
+            }
+
+            var formData = new FormData(this);
+            $.ajax({
+                type: 'POST',
+                url: '/',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    console.log('Upload successful!');
+                    $('#loading-indicator').hide();  // Hide the loading indicator on success
+                    $('#success-toast').toast('show');  // Show the success toast
+                }
+            });
+        });
+    </script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+</html>
