@@ -46,7 +46,7 @@ def upload_file():
 def run_script(filepath, numOfTimes):
     try:
         logging.info(f"Running script with filepath: {filepath} and numOfTimes: {numOfTimes}")
-        subprocess.run(["python", "C:/ACStressTest/DropCommandsUsingCLITool.py", filepath, str(numOfTimes)], check=True, shell=True)
+        subprocess.run(["python", "toolname.py", filepath, str(numOfTimes)], check=True, shell=True)
         logging.info("Script completed successfully")
     except subprocess.CalledProcessError as e:
         logging.error(f"An error occurred while running the script: {e}")
